@@ -21,5 +21,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
   }
 
-  return true; // keep async channel open
+  return true;
 });
