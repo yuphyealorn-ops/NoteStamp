@@ -15,7 +15,7 @@ Current version: `v0.1.1`.
 
 ## Release Notes
 
-- Updated extension version to 0.2.0 (The first release should have shown as 0.1.0 in Chrome Extensions but I accidentally put it as 1.0)
+- Updated extension version to 0.1.1 (The first release should have shown as 0.1.0 in Chrome Extensions but I accidentally put it as 1.0)
 - Changed the extension's title to NoteStamp
 
 ## Future Releases
