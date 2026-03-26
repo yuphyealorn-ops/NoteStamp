@@ -1,10 +1,10 @@
-# YT Timestamp Notetaker
+# NoteStamp: A YouTube Timestamp Notetaker
 
 Chrome extension for taking timestamped notes while watching YouTube videos.
 
-This is the first test release.
+Current version: `v0.1.1`.
 
-## Release Notes
+## Current Features
 
 - Capture the current video timestamp from a YouTube watch page
 - Write and save notes tied to that captured timestamp
@@ -12,6 +12,11 @@ This is the first test release.
 - Auto-load existing notes for the current video when the popup opens
 - Delete individual notes
 - Keyboard shortcut: `Ctrl+Enter` (Windows/Linux) or `Cmd+Enter` (Mac) to add a note
+
+## Release Notes
+
+- Updated extension version to 0.2.0 (The first release should have shown as 0.1.0 in Chrome Extensions but I accidentally put it as 1.0)
+- Changed the extension's title to NoteStamp
 
 ## Future Releases
 
