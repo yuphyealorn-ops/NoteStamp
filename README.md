@@ -11,16 +11,8 @@ Current version: `v0.2.0`.
 - Store notes per video URL using `chrome.storage.local`
 - Auto-load existing notes for the current video when the popup opens
 - Delete individual notes
-- Keyboard shortcut: `Ctrl+Enter` (Windows/Linux) or `Cmd+Enter` (Mac) to add a note
-
-## Release Notes
-
 - Click a note timestamp to jump/seek in the current video
-
-## Future Releases
-
-- Export notes 
-- Clear all notes 
+- Keyboard shortcut: `Ctrl+Enter` (Windows/Linux) or `Cmd+Enter` (Mac) to add a note
 
 ## Installation (Load Unpacked in Chrome)
 
