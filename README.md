@@ -2,7 +2,7 @@
 
 Chrome extension for taking timestamped notes while watching YouTube videos.
 
-Current version: `v0.1.1`.
+Current version: `v0.2.0`.
 
 ## Current Features
 
@@ -15,12 +15,12 @@ Current version: `v0.1.1`.
 
 ## Release Notes
 
-- Updated extension version to 0.1.1 (The first release should have shown as 0.1.0 in Chrome Extensions but I accidentally put it as 1.0)
-- Changed the extension's title to NoteStamp
+- Click a note timestamp to jump/seek in the current video
 
 ## Future Releases
 
-- Click timestamp to jump/seek in the video
+- Export notes 
+- Clear all notes 
 
 ## Installation (Load Unpacked in Chrome)
 
