@@ -2,7 +2,7 @@
 
 Chrome extension for taking timestamped notes while watching YouTube videos.
 
-Current version: `v0.2.0`.
+Current version: `v0.3.0`.
 
 ## Current Features
 
@@ -11,6 +11,8 @@ Current version: `v0.2.0`.
 - Store notes per video URL using `chrome.storage.local`
 - Auto-load existing notes for the current video when the popup opens
 - Delete individual notes
+- Export notes for the current video as a `.txt` file
+- Clear all notes for the current video (with confirmation)
 - Click a note timestamp to jump/seek in the current video
 - Keyboard shortcut: `Ctrl+Enter` (Windows/Linux) or `Cmd+Enter` (Mac) to add a note
 
