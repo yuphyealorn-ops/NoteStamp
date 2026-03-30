@@ -8,6 +8,8 @@ const addNoteBtn = document.getElementById("addNoteBtn");
 const captureBtn = document.getElementById("captureBtn");
 const notesList = document.getElementById("notesList");
 const noteCount = document.getElementById("noteCount");
+const exportBtn = document.getElementById("exportBtn");
+const clearBtn = document.getElementById("clearBtn");
 const videoTitleEl = document.getElementById("videoTitle");
 const videoInfoEl = document.getElementById("videoInfo");
 
@@ -72,8 +74,7 @@ function renderNotes(notes) {
 }
 
 // Core: get video info by injecting a script directly
-// This works even if the content script hasn't been injected yet (e.g. tabs
-// that were open before the extension was installed/reloaded).
+// this works even if the content script hasn't been injected yet (e.g. tabs that were open before the extension was installed/reloaded).
 function getVideoInfo(tabId) {
   return chrome.scripting.executeScript({
     target: { tabId },
@@ -154,6 +155,32 @@ function deleteNote(index) {
     renderNotes(notes);
   });
 }
+
+// Export 
+exportBtn.addEventListener("click", () => {
+  if (!currentVideoUrl) return;
+  chrome.storage.local.get(storageKey(currentVideoUrl), (data) => {
+    const notes = data[storageKey(currentVideoUrl)] || [];
+    if (!notes.length) return;
+    const lines = [`📝 Notes for: ${currentVideoTitle}`, `🔗 ${currentVideoUrl}`, ""];
+    notes.forEach((n) => lines.push(`[${formatTime(n.time)}] ${n.text}`));
+    const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `notes-${currentVideoTitle.slice(0, 40).replace(/\s+/g, "-")}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+});
+
+// Clear 
+clearBtn.addEventListener("click", () => {
+  if (!currentVideoUrl) return;
+  if (!confirm("Clear all notes for this video?")) return;
+  saveNotes(currentVideoUrl, []);
+  renderNotes([]);
+});
 
 noteInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) addNoteBtn.click();
