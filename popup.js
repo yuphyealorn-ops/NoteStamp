@@ -48,14 +48,6 @@ function saveNotes(url, notes, cb) {
   chrome.storage.local.set({ [storageKey(url)]: notes }, cb);
 }
 
-function escapeHtml(str) {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
 function showStatus(msg) {
   let el = document.getElementById("statusMsg");
   if (!el) {
@@ -72,29 +64,51 @@ function showStatus(msg) {
 
 function renderNotes(notes) {
   noteCount.textContent = notes.length;
+  notesList.replaceChildren();
+
   if (notes.length === 0) {
-    notesList.innerHTML = `
-      <div class="empty-state">
-        <p>No notes yet.</p>
-        <p>Open a YouTube video, capture a timestamp, and start noting!</p>
-      </div>`;
+    const emptyState = document.createElement("div");
+    emptyState.className = "empty-state";
+
+    const title = document.createElement("p");
+    title.textContent = "No notes yet.";
+    const subtitle = document.createElement("p");
+    subtitle.textContent = "Open a YouTube video, capture a timestamp, and start noting!";
+
+    emptyState.append(title, subtitle);
+    notesList.appendChild(emptyState);
     return;
   }
-  notesList.innerHTML = notes.map((note, i) => `
-    <div class="note-card" data-index="${i}">
-      <div class="note-meta">
-        <span class="note-time" data-time="${note.time}">${formatTime(note.time)}</span>
-        <button class="note-delete" data-index="${i}" title="Delete note">✕</button>
-      </div>
-      <div class="note-text">${escapeHtml(note.text)}</div>
-    </div>
-  `).join("");
 
-  notesList.querySelectorAll(".note-time").forEach((el) => {
-    el.addEventListener("click", () => seekVideo(parseFloat(el.dataset.time)));
-  });
-  notesList.querySelectorAll(".note-delete").forEach((el) => {
-    el.addEventListener("click", () => deleteNote(parseInt(el.dataset.index, 10)));
+  notes.forEach((note, i) => {
+    const card = document.createElement("div");
+    card.className = "note-card";
+    card.dataset.index = String(i);
+
+    const meta = document.createElement("div");
+    meta.className = "note-meta";
+
+    const timeEl = document.createElement("span");
+    timeEl.className = "note-time";
+    timeEl.dataset.time = String(note.time);
+    timeEl.textContent = formatTime(note.time);
+    timeEl.addEventListener("click", () => seekVideo(note.time));
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "note-delete";
+    deleteBtn.dataset.index = String(i);
+    deleteBtn.title = "Delete note";
+    deleteBtn.type = "button";
+    deleteBtn.textContent = "✕";
+    deleteBtn.addEventListener("click", () => deleteNote(i));
+
+    const text = document.createElement("div");
+    text.className = "note-text";
+    text.textContent = note.text;
+
+    meta.append(timeEl, deleteBtn);
+    card.append(meta, text);
+    notesList.appendChild(card);
   });
 }
 
@@ -337,23 +351,32 @@ function refreshHistory() {
       });
 
     if (!entries.length) {
-      historyList.innerHTML = '<div class="empty-state small">No saved videos yet.</div>';
+      const emptyState = document.createElement("div");
+      emptyState.className = "empty-state small";
+      emptyState.textContent = "No saved videos yet.";
+      historyList.replaceChildren(emptyState);
       return;
     }
 
-    historyList.innerHTML = entries.map((entry) => {
-      const encodedUrl = encodeURIComponent(entry.url);
-      return `
-        <div class="history-item" data-url="${encodedUrl}">
-          <div class="history-item-title">${escapeHtml(entry.title)}</div>
-          <div class="history-item-meta">${entry.count} note${entry.count === 1 ? "" : "s"}</div>
-        </div>
-      `;
-    }).join("");
+    historyList.replaceChildren();
 
-    historyList.querySelectorAll(".history-item").forEach((el) => {
-      el.addEventListener("click", () => {
-        const url = decodeURIComponent(el.dataset.url);
+    entries.forEach((entry) => {
+      const item = document.createElement("div");
+      item.className = "history-item";
+      item.dataset.url = entry.url;
+
+      const title = document.createElement("div");
+      title.className = "history-item-title";
+      title.textContent = entry.title;
+
+      const meta = document.createElement("div");
+      meta.className = "history-item-meta";
+      meta.textContent = `${entry.count} note${entry.count === 1 ? "" : "s"}`;
+
+      item.append(title, meta);
+
+      item.addEventListener("click", () => {
+        const url = entry.url;
         closeSidebar();
 
         chrome.tabs.query({ url: "https://www.youtube.com/watch*" }, (tabs) => {
@@ -380,6 +403,8 @@ function refreshHistory() {
           renderNotes(notes);
         });
       });
+
+      historyList.appendChild(item);
     });
   });
 }
